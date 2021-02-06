@@ -205,3 +205,11 @@ button:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+
+/* 404 not found page */
+
+.not-found {
+  text-align: center;
+  font-size: 4em;
+}

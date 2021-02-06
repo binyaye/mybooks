@@ -9,16 +9,16 @@ class Selector extends Component {
   render() {
     const { book, updateShelf } = this.props
     return <div className="book-shelf-changer">
-        <select value={book.shelf} onChange={(event) => {
+        <select value = {book.shelf || 'none'} onChange={(event) => {
             updateShelf(book, event.target.value);
           }}>
-          <option value="none" disabled>
+          <option value="moveto" disabled>
             Move to...
           </option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="wantToRead">Want to Read</option>
           <option value="read">Read</option>
-          <option value="none" defaultValue>
+          <option value="none">
             None
           </option>
         </select>

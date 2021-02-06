@@ -1,10 +1,11 @@
 import React from 'react'
-import { Route, Link } from "react-router-dom"
+import { Link, BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import SearchBooks from './SearchBooks'
 import Header from './Header'
 import BookShelf from "./BookShelf"
+import NotFound from './NotFound'
 import swal from "sweetalert"
 import { Snackbar } from "./snack"
 
@@ -29,8 +30,8 @@ class BooksApp extends React.Component {
       .then((books) => {
         this.setState(() => ({ books }));
       })
-      .catch((err) =>  swal(
-          err,
+      .catch(() =>  swal(
+          "error",
           "Something went wrong...",
           "error"
         ))
@@ -58,9 +59,9 @@ class BooksApp extends React.Component {
         .then((searchedBooks) => {
           this.setState(() => ({ searchedBooks }));
         })
-        .catch((err) => {
+        .catch(() => {
           this.setState(() => ({ searchedBooks: [] }))
-           swal(err, "Please make sure using the right keyword", "error");
+           swal("", "no item matched your search", "error");
       });
     } else {
       this.setState(() => ({
@@ -70,6 +71,9 @@ class BooksApp extends React.Component {
   };
 
   updateShelf = (includedBook, shelf) => {
+    if (shelf === 'none') {
+      console.log('none selected')
+    } else {
     BooksAPI.update(includedBook, shelf).then(() => {
       includedBook.shelf = shelf;
     }).catch(err =>{
@@ -80,7 +84,8 @@ class BooksApp extends React.Component {
     );
     addedBooks.push(includedBook);
     this.setState({ books: includedBook });
-     swal("Success", includedBook.title +" is added to " + shelf , "success");
+    swal("Success", includedBook.title + " is added to " + shelf , "success")
+    }
     this.componentDidMount();
   }
 
@@ -88,7 +93,9 @@ class BooksApp extends React.Component {
     return <div className="app">
         <Header />
         <div className="main-container">
-          <Route exact path="/" render={() => <div>
+          <Router>
+            <Switch>
+              <Route exact path="/" render={() => <div>
                 <BookShelf books={this.state.books} updateShelf={this.updateShelf} />
                 <div className="open-search">
                   <Link to="/search">
@@ -97,7 +104,10 @@ class BooksApp extends React.Component {
                 </div>
                 <Snackbar ref={this.snackbarRef} />
               </div>} />
-          <Route path="/search" render={() => <SearchBooks searchedBooks={this.state.searchedBooks} updateShelf={this.updateShelf} searchBook={this.searchBook} />} />
+              <Route path="/search" render={() => <SearchBooks searchedBooks={this.state.searchedBooks} updateShelf={this.updateShelf} searchBook={this.searchBook} />} />
+              <Route component={NotFound} />
+            </Switch>
+          </Router>
         </div>
       </div>;
   }

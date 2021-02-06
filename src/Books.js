@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import no_image from './icons/no-image.png'
 import Selector from './Selector'
 import PropTypes from 'prop-types'
 
@@ -12,7 +11,7 @@ class Books extends Component {
     const backgroundImage =
       book.imageLinks && book.imageLinks.thumbnail
         ? book.imageLinks.thumbnail
-        : no_image;
+        : "http://via.placeholder.com/128x193?text=No%20Cover";
     return <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 192, backgroundImage: `url(${backgroundImage})` }} />
