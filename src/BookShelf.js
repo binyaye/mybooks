@@ -15,8 +15,8 @@ function BookShelf (props) {
   const wantToRead = Object.values(props.books).filter((book) => book.shelf === "wantToRead");
   const read = Object.values(props.books).filter((book) => book.shelf === "read");
   const currentlyReading = Object.values(props.books).filter((book) => book.shelf === "currentlyReading");
-  return (
-    <div className="container">
+  const allCategories = [currentlyReading, wantToRead, read];
+  return <div className="container">
       <div className="row">
         <Breadcrumb>
           <BreadcrumbItem active>Home</BreadcrumbItem>
@@ -33,57 +33,36 @@ function BookShelf (props) {
       </div>
       <Stagger in>
         <FadeTransform in transformProps={{ exitTransform: "scale(0.5) translateX(-50%)" }}>
-          <Card style={{ background: "white", margin: "10px", height: "auto" }}>
-            <CardBody>
-              <CardHeader className="h1-responsive" style={{ color: "#26293A" }}>
-                Currently reading
-              </CardHeader>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {currentlyReading.map((book) => <li key={book.id}>
-                      <Books book={book} updateShelf={props.updateShelf} />
-                    </li>)}
-                </ol>
-              </div>
-            </CardBody>
-          </Card>
-        </FadeTransform>
-        <FadeTransform in transformProps={{ exitTransform: "scale(0.5) translateY(-50%)" }}>
-          <Card style={{ background: "white", margin: "10px", height: "auto" }}>
-            <CardBody>
-              <CardHeader className="h1-responsive" style={{ color: "#26293A" }}>
-                Want to Read
-              </CardHeader>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {wantToRead.map((book) => <li key={book.id}>
-                      <Books book={book} updateShelf={props.updateShelf} />
-                    </li>)}
-                </ol>
-              </div>
-            </CardBody>
-          </Card>
-        </FadeTransform>
-        <FadeTransform in transformProps={{ exitTransform: "scale(0.5) translateY(-50%)" }}>
-          <Card style={{ background: "white", margin: "10px", height: "auto" }}>
-            <CardBody>
-              <CardHeader className="h1-responsive" style={{ color: "#26293A" }}>
-                Read
-              </CardHeader>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {read.map((book) => <li key={book.id}>
-                      <Books book={book} updateShelf={props.updateShelf} />
-                    </li>)}
-                </ol>
-              </div>
-            </CardBody>
-          </Card>
+          {allCategories.map((category, index) => <diV>
+              <Card style={{ background: "white", margin: "10px", height: "auto" }}>
+                <CardBody>
+                  <CardHeader className="h1-responsive" style={{ color: "#26293A" }}>
+                    {(() => {
+                      switch (index) {
+                        case 0:
+                          return "Currently Reading";
+                        case 1:
+                          return "Want to Read";
+                        case 2:
+                          return "Read";
+                        default:
+                          break;
+                      }
+                    })()}
+                  </CardHeader>
+                  <div className="bookshelf-books">
+                    <ol className="books-grid">
+                      {Object.values(category).map((book) => <li key={book.id}>
+                          <Books book={book} updateShelf={props.updateShelf} />
+                        </li>)}
+                    </ol>
+                  </div>
+                </CardBody>
+              </Card>
+            </diV>)}
         </FadeTransform>
       </Stagger>
-    </div>
-  )        
-      
+    </div>;           
 }
 
 BookShelf.propType = {
